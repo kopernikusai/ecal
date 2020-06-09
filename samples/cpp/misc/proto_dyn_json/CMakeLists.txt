@@ -28,7 +28,7 @@ ecal_add_sample(${PROJECT_NAME} ${proto_dyn_json_src})
 
 target_link_libraries(${PROJECT_NAME} eCAL::core)
 
-find_package(Protobuf REQUIRED)
+ecal_find_package(Protobuf REQUIRED)
 target_link_libraries(${PROJECT_NAME} protobuf::libprotobuf)
 
 ecal_install_sample(${PROJECT_NAME})
