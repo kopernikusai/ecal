@@ -18,7 +18,7 @@
 
 project(proto_dyn_json)
 
-find_package(eCAL REQUIRED)
+ecal_find_package(eCAL REQUIRED)
 
 set(proto_dyn_json_src
     src/proto_dyn_json.cpp
