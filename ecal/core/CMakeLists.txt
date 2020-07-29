@@ -5,9 +5,9 @@
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -318,23 +318,23 @@ set(ecal_header_base
     ${ecal_header_msg}
 )
 
-ecal_add_ecal_shared_library(${PROJECT_NAME} 
-    ${ecal_io_cpp_src} 
-    ${ecal_io_mem_cpp_src} 
-    ${ecal_io_mem_cpp_win_src} 
-    ${ecal_io_mem_cpp_linux_src} 
-    ${ecal_mon_cpp_src} 
-    ${ecal_pubsub_cpp_src} 
-    ${ecal_readwrite_cpp_src} 
+ecal_add_ecal_library(${PROJECT_NAME}
+    ${ecal_io_cpp_src}
+    ${ecal_io_mem_cpp_src}
+    ${ecal_io_mem_cpp_win_src}
+    ${ecal_io_mem_cpp_linux_src}
+    ${ecal_mon_cpp_src}
+    ${ecal_pubsub_cpp_src}
+    ${ecal_readwrite_cpp_src}
     ${ecal_readwrite_shm_cpp_src}
     ${ecal_service_cpp_src}
     ${ecal_cmn_cpp_src}
 
     ${ecal_cmn_header_src}
     ${ecal_io_header_src}
-    ${ecal_io_mem_header_src} 
-    ${ecal_io_mem_header_win_src} 
-    ${ecal_io_mem_header_linux_src} 
+    ${ecal_io_mem_header_src}
+    ${ecal_io_mem_header_win_src}
+    ${ecal_io_mem_header_linux_src}
     ${ecal_mon_header_src}
     ${ecal_pubsub_header_src}
     ${ecal_readwrite_header_src}
@@ -344,7 +344,7 @@ ecal_add_ecal_shared_library(${PROJECT_NAME}
     ${ecal_header_base}
     ${ecal_header_cimpl}
     ${ecal_header_msg}
-    
+
     ${CMAKE_CURRENT_BINARY_DIR}/include/ecal/ecal_defs.h
 )
 
@@ -352,7 +352,7 @@ if(UNIX)
   set_source_files_properties(convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
-ecal_add_ecal_shared_library(${PROJECT_NAME}_c ${ecal_c_src} ${ecal_c_win_src})
+ecal_add_ecal_library(${PROJECT_NAME}_c ${ecal_c_src} ${ecal_c_win_src})
 
 add_library(eCAL::${PROJECT_NAME}   ALIAS ${PROJECT_NAME})
 add_library(eCAL::${PROJECT_NAME}_c ALIAS ${PROJECT_NAME}_c)
@@ -385,7 +385,7 @@ if(ECAL_NPCAP_SUPPORT)
  endif(ECAL_NPCAP_SUPPORT)
 
 target_include_directories(${PROJECT_NAME}
-  PRIVATE 
+  PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -393,17 +393,17 @@ target_include_directories(${PROJECT_NAME}
     $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(${PROJECT_NAME} 
+target_link_libraries(${PROJECT_NAME}
   PUBLIC
     eCAL::proto
   PRIVATE
     $<$<BOOL:${UNIX}>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>>:rt>
     $<$<BOOL:${WIN32}>:iphlpapi>
-    $<$<BOOL:${WIN32}>:psapi> 
-    $<$<BOOL:${WIN32}>:shlwapi.lib> 
-    $<$<BOOL:${WIN32}>:winmm> 
-    $<$<BOOL:${WIN32}>:ws2_32> 
+    $<$<BOOL:${WIN32}>:psapi>
+    $<$<BOOL:${WIN32}>:shlwapi.lib>
+    $<$<BOOL:${WIN32}>:winmm>
+    $<$<BOOL:${WIN32}>:ws2_32>
     $<$<BOOL:${WIN32}>:wsock32>
     asio::asio
     tclap::tclap
@@ -425,18 +425,18 @@ install(DIRECTORY
    "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
     FILES_MATCHING PATTERN "*.h")
 
-#Install generated ecal_defs.h file    
+#Install generated ecal_defs.h file
 install(DIRECTORY
    "${CMAKE_CURRENT_BINARY_DIR}/include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
     FILES_MATCHING PATTERN "*.h")
-    
 
-if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
-  source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Source Files" FILES 
+
+if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
+  source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Source Files" FILES
     ${ecal_io_cpp_src}
     ${ecal_io_mem_cpp_src}
-    ${ecal_io_mem_cpp_linux_src} 
-    ${ecal_io_mem_cpp_win_src} 
+    ${ecal_io_mem_cpp_linux_src}
+    ${ecal_io_mem_cpp_win_src}
     ${ecal_io_cpp_linux_src}
     ${ecal_io_cpp_win32_src}
     ${ecal_mon_cpp_src}
@@ -448,8 +448,8 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_c_src}
     ${ecal_c_win_src}
   )
-  
-  source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Header Files\\internal" FILES 
+
+  source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" PREFIX "Header Files\\internal" FILES
     ${ecal_cmn_header_src}
     ${ecal_io_header_src}
     ${ecal_io_mem_header_src}
@@ -462,8 +462,8 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
     ${ecal_readwrite_shm_header_src}
     ${ecal_service_header_src}
   )
-  
-  source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/include" PREFIX "Header Files\\public" FILES 
+
+  source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/include" PREFIX "Header Files\\public" FILES
     ${ecal_header_cmn}
     ${ecal_header_cimpl}
     ${ecal_header_msg}
