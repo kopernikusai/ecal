@@ -18,6 +18,9 @@
 
 cmake_minimum_required(VERSION 3.13)
 
+set(BUILD_SHARED_LIBS OFF)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 list(APPEND CMAKE_MODULE_PATH
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
@@ -36,14 +39,14 @@ cmake_policy(SET CMP0054 NEW)
 # use it that way cmake .. -DBUILD_APPS=ON -DBUILD_SAMPLES=ON
 # --------------------------------------------------------
 option(HAS_HDF5                                "Platform supports HDF5 library"                                    ON)
-option(HAS_QT5                                 "Platform supports Qt 5 library"                                    ON)
-option(HAS_CURL                                "Build with CURL (i.e. upload support in the recorder app)"         ON)
+option(HAS_QT5                                 "Platform supports Qt 5 library"                                    OFF)
+option(HAS_CURL                                "Build with CURL (i.e. upload support in the recorder app)"         OFF)
 option(HAS_CAPNPROTO                           "Platform supports Cap'n Proto library"                            OFF)
 
 option(BUILD_DOCS                              "Build the eCAL documentation"                                     OFF)
-option(BUILD_APPS                              "Build the eCAL applications"                                       ON)
-option(BUILD_SAMPLES                           "Build the eCAL samples"                                            ON)
-option(BUILD_TIME                              "Build the eCAL time interfaces"                                    ON)
+option(BUILD_APPS                              "Build the eCAL applications"                                       OFF)
+option(BUILD_SAMPLES                           "Build the eCAL samples"                                            OFF)
+option(BUILD_TIME                              "Build the eCAL time interfaces"                                    OFF)
 option(BUILD_PY_BINDING                        "Build eCAL python binding"                                        OFF)
 option(BUILD_CSHARP_BINDING                    "Build eCAL C# binding"                                            OFF)
 option(BUILD_TESTS                             "Build the eCAL google tests"                                      OFF)
@@ -51,7 +54,7 @@ option(BUILD_TESTS                             "Build the eCAL google tests"    
 option(ECAL_LAYER_ICEORYX                      "Use iceoryx shared memory as local communication layer"           OFF)
 
 option(ECAL_INCLUDE_PY_SAMPLES                 "Include python language sample projects into CMake"               OFF)
-option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samples"                               ON)
+option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samples"                               OFF)
 
 option(ECAL_JOIN_MULTICAST_TWICE               "Specific Multicast Network Bug Workaround"                        OFF)
 option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
@@ -124,17 +127,19 @@ endif()
 if (ECAL_THIRDPARTY_BUILD_PROTOBUF)
   list(APPEND as_subproject Protobuf)
   set(protobuf_BUILD_TESTS OFF CACHE BOOL "My option" FORCE)
-  set(protobuf_MSVC_STATIC_RUNTIME OFF CACHE BOOL "My option" FORCE)
+  set(protobuf_MSVC_STATIC_RUNTIME ON CACHE BOOL "My option" FORCE)
   if(UNIX)
-    set(protobuf_BUILD_SHARED_LIBS ON CACHE BOOL "My option" FORCE)
+    set(protobuf_BUILD_SHARED_LIBS OFF CACHE BOOL "My option" FORCE)
   endif()
   add_subdirectory(thirdparty/protobuf/cmake)
   if (NOT TARGET protobuf::libprotobuf)
     add_library(protobuf::libprotobuf ALIAS libprotobuf)
   endif()
-  if (NOT TARGET protobuf::protoc)
-    add_executable(protobuf::protoc ALIAS protoc)
-    set(Protobuf_PROTOC_EXECUTABLE protoc)
+  if (NOT CMAKE_CROSSCOMPILING)
+    if (NOT TARGET protobuf::protoc)
+      add_executable(protobuf::protoc ALIAS protoc)
+      set(Protobuf_PROTOC_EXECUTABLE protoc)
+    endif()
   endif()
   set(Protobuf_VERSION 3.11.4)
 endif()
@@ -184,27 +189,27 @@ endif ()
 
 if (ECAL_THIRDPARTY_BUILD_CURL)
   list(APPEND as_subproject CURL)
-  
+
   if(WIN32)
     set(CMAKE_USE_WINSSL ON CACHE BOOL "Use native SSL on Windows" FORCE)
   endif()
-  
+
   set(BUILD_CURL_EXE OFF CACHE BOOL "Don't build the curl executable" FORCE)
   set(ENABLE_MANUAL  OFF CACHE BOOL "Disable built-in manual" FORCE)
-  
+
   add_subdirectory(thirdparty/curl)
-  
+
   if (NOT TARGET CURL::libcurl)
     add_library(CURL::libcurl ALIAS libcurl)
   endif()
-  
+
 endif ()
 
 if (ECAL_THIRDPARTY_BUILD_GTEST)
   list(APPEND as_subproject GTest)
   # Googletest automatically forces MT instead of MD if we do not set this option.
   if(MSVC)
-    set(gtest_force_shared_crt ON CACHE BOOL "My option" FORCE)
+    set(gtest_force_shared_crt OFF CACHE BOOL "My option" FORCE)
     set(BUILD_GMOCK OFF CACHE BOOL "My option" FORCE)
     set(INSTALL_GTEST OFF CACHE BOOL "My option" FORCE)
   endif()
@@ -227,8 +232,8 @@ if (ECAL_THIRDPARTY_BUILD_HDF5)
   set(HDF5_BUILD_EXAMPLES    OFF CACHE BOOL "Don not build HDF5 Library Examples" FORCE)
   set(HDF5_BUILD_CPP_LIB     OFF CACHE BOOL "Don not build C++ lib" FORCE)
   set(HDF5_BUILD_HL_LIB      OFF CACHE BOOL "Don not build hdf5-hl" FORCE)
-  set(ONLY_SHARED_LIBS       ON)
-  
+  set(ONLY_SHARED_LIBS       OFF)
+
   set(HDF5_EXTERNALLY_CONFIGURED 1)
   set(HDF5_EXPORTED_TARGETS eCALCoreTargets)
 
@@ -236,17 +241,17 @@ if (ECAL_THIRDPARTY_BUILD_HDF5)
   # Hence we need to save the old value, enable it, and then set it back to the old value
 
   set(BUILD_SHARED_LIBS_OLD ${BUILD_SHARED_LIBS})
-  set(BUILD_SHARED_LIBS ON CACHE BOOL "Build hdf5 shared" FORCE)
+  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build hdf5 shared" FORCE)
 
   add_subdirectory(thirdparty/hdf5)
 
   set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD} CACHE BOOL "Build hdf5 shared" FORCE)
 
   if(NOT TARGET hdf5::hdf5-shared)
-    add_library(hdf5::hdf5-shared ALIAS hdf5-shared)
+    add_library(hdf5::hdf5-shared ALIAS hdf5-static)
   endif()
 
-  target_include_directories(hdf5-shared INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/thirdparty/hdf5>")
+  target_include_directories(hdf5-static INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/thirdparty/hdf5>")
 endif()
 
 if (ECAL_THIRDPARTY_BUILD_PROTOBUF OR

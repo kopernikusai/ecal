@@ -5,9 +5,9 @@
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,16 +24,14 @@ set(ecal_apps_header
 
 ecal_add_interface_library(${PROJECT_NAME} ${ecal_apps_header})
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-target_include_directories(${PROJECT_NAME} INTERFACE 
+target_include_directories(${PROJECT_NAME} INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-#  $<INSTALL_INTERFACE:include>
+  $<INSTALL_INTERFACE:include>
 )
 
-#install(
-#  DIRECTORY "include/" 
-#  DESTINATION "${INSTALL_INCLUDE_DIR}" 
-#  COMPONENT sdk
-#  FILES_MATCHING PATTERN "*.h"
-#)
+install(TARGETS ${PROJECT_NAME}
+  EXPORT eCALCoreTargets
+  PUBLIC_HEADER DESTINATION include COMPONENT sdk
+)
 
 #set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER contrib)
