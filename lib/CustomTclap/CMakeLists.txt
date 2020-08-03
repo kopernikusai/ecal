@@ -37,7 +37,7 @@ ecal_add_static_library(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-	PUBLIC
+	PRIVATE
 	    tclap::tclap
 )
 

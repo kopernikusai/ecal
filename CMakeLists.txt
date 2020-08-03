@@ -16,7 +16,8 @@
 #
 # ========================= eCAL LICENSE =================================
 
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.15)
+cmake_policy(SET CMP0091 NEW)
 
 set(BUILD_SHARED_LIBS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -24,6 +25,9 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 list(APPEND CMAKE_MODULE_PATH
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
+
+
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 project(eCAL)
 
@@ -68,7 +72,7 @@ option(ECAL_THIRDPARTY_BUILD_FINEFTP           "Build fineFTP with eCAL"        
 
 # option(ECAL_THIRDPARTY_BUILD_ZLIB              "Build zlib with eCAL"                                              ON)
 # option(ECAL_THIRDPARTY_BUILD_LIBSSH2           "Build libssh2 with eCAL"                                           ON)
-option(ECAL_THIRDPARTY_BUILD_CURL              "Build CURL with eCAL"                                              ON)
+option(ECAL_THIRDPARTY_BUILD_CURL              "Build CURL with eCAL"                                              OFF)
 
 option(ECAL_THIRDPARTY_BUILD_GTEST             "Build gtest with eCAL"                                            OFF)
 option(ECAL_THIRDPARTY_BUILD_HDF5              "Build HDF5 with eCAL"                                             ON)

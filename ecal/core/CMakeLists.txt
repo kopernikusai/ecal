@@ -368,6 +368,11 @@ target_compile_definitions(${PROJECT_NAME}
   PUBLIC ASIO_STANDALONE
   PRIVATE eCAL_EXPORTS)
 
+if (NOT BUILD_SHARED_LIBS)
+  target_compile_definitions(${PROJECT_NAME} PUBLIC ECAL_STATIC)
+  target_compile_definitions(${PROJECT_NAME}_c PUBLIC ECAL_STATIC)
+endif()
+
 if(ECAL_LAYER_ICEORYX)
   if(UNIX)
     ecal_find_package(iceoryx_posh REQUIRED)
