@@ -19,7 +19,7 @@
 project(core VERSION ${eCAL_VERSION_STRING})
 
 ecal_find_package(Threads      REQUIRED)
-ecal_find_package(asio         REQUIRED)
+ecal_find_package(Asio         REQUIRED)
 ecal_find_package(tclap        REQUIRED)
 ecal_find_package(simpleini    REQUIRED)
 
