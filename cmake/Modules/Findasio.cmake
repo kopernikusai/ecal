@@ -1,7 +1,9 @@
 find_path(Asio_INCLUDE_DIR
   NAMES asio.hpp
   HINTS
-    include ${CONAN_ASIO_ROOT}/include
+    $ENV{CONDA_PREFIX}/include
+    $ENV{CONDA_PREFIX}/Library/include
+    ${CONAN_ASIO_ROOT}/include
     ${CMAKE_SOURCE_DIR}/thirdparty/asio/asio/include
     include
   )
