@@ -294,9 +294,9 @@ endif ()
 ecal_find_package(CMakeFunctions REQUIRED)
 
 #git_revision_information()
-set(eCAL_VERSION_MAJOR  5)
-set(eCAL_VERSION_MINOR  6)
-set(eCAL_VERSION_PATCH  0)
+set(eCAL_VERSION_MAJOR  "5")
+set(eCAL_VERSION_MINOR  "6")
+set(eCAL_VERSION_PATCH  "0")
 set(eCAL_VERSION_STRING ${eCAL_VERSION_MAJOR}.${eCAL_VERSION_MINOR}.${eCAL_VERSION_PATCH})
 set(eCAL_VERSION        ${eCAL_VERSION_STRING})
 
